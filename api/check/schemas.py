@@ -20,5 +20,5 @@ class ChatPayload(BaseModel):
     chatbot_global_action: Optional[str] = "Act as an assistant."
     previous_history: List[str] = []
     temperature: float = 0.0
-    max_tokens: int = 150
+    max_tokens: int = 225
     fallback_providers: Optional[str] = ""
