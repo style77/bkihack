@@ -1,5 +1,5 @@
 from typing import Any
-from api.check.schemas import ChatPayload
+from api.check.schemas import ChatPayload, ImagePayload
 from api.settings import settings
 import httpx
 
@@ -18,6 +18,13 @@ class CheckService:
     async def chat(self, payload: ChatPayload):
         response = await self.request_edenai(
             "text/chat",
+            payload
+        )
+        return response.json()
+
+    async def image_detect(self, payload: ImagePayload):
+        response = await self.request_edenai(
+            "image/explicit_content",
             payload
         )
         return response.json()

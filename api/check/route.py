@@ -1,6 +1,6 @@
 import json
 from fastapi import APIRouter, UploadFile, File
-from api.check.schemas import ChatPayload, CheckRequest, CheckResponse
+from api.check.schemas import ChatPayload, CheckRequest, CheckResponse, ImageCheckRequest, ImagePayload
 from api.check.service import service
 
 router = APIRouter()
@@ -18,17 +18,21 @@ Przykładowe wyjście:
 Tresc postu: 
 """
 
+
 @router.post("/post")
 async def check_post(data: CheckRequest):
-    q = QUERY + f"\"{data.post_text}\""
+    q = QUERY + f'"{data.post_text}"'
     payload = ChatPayload(text=q)
 
     response = await service.chat(payload)
-    parsed_response = json.loads(response.get('openai')['generated_text'])
+    parsed_response = json.loads(response.get("openai")["generated_text"])
     damage_score = float(parsed_response.get("damageRatio"))
     explanation = parsed_response.get("explanation")
     return CheckResponse(damage_score=damage_score, explanation=explanation)
 
+
 @router.post("/image")
-async def check_image(file: UploadFile):
-    ...
+async def check_image(data: ImageCheckRequest):
+    payload = ImagePayload(file_url=data.file_url)
+    response = await service.image_detect(payload)
+    return response

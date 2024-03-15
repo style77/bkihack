@@ -14,6 +14,11 @@ class CheckResponse(BaseModel):
     explanation: str
 
 
+class ImageCheckRequest(BaseModel):
+    # Image file to be checked
+    file_url: str
+
+
 class ChatPayload(BaseModel):
     providers: str = "openai"
     text: str
@@ -21,4 +26,10 @@ class ChatPayload(BaseModel):
     previous_history: List[str] = []
     temperature: float = 0.0
     max_tokens: int = 225
+    fallback_providers: Optional[str] = ""
+
+
+class ImagePayload(BaseModel):
+    providers: str = "amazon"
+    file_url: str
     fallback_providers: Optional[str] = ""
