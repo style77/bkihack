@@ -1,6 +1,6 @@
 import json
-from fastapi import APIRouter, UploadFile, File
-from api.check.schemas import ChatPayload, CheckRequest, CheckResponse, ImageCheckRequest, ImagePayload
+from fastapi import APIRouter
+from api.check.schemas import ChatPayload, CheckRequest, CheckResponse, ImageCheckRequest, ImageCheckResponse, ImagePayload
 from api.check.service import service
 
 router = APIRouter()
@@ -35,4 +35,7 @@ async def check_post(data: CheckRequest):
 async def check_image(data: ImageCheckRequest):
     payload = ImagePayload(file_url=data.file_url)
     response = await service.image_detect(payload)
-    return response
+    item = response["amazon"]["items"][0]
+    potential_tw = item["label"]
+    score = item["likelihood_score"]
+    return ImageCheckResponse(potential_tw=potential_tw, score=score)

@@ -1,4 +1,4 @@
-from typing import List, Literal, Optional
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -17,6 +17,11 @@ class CheckResponse(BaseModel):
 class ImageCheckRequest(BaseModel):
     # Image file to be checked
     file_url: str
+
+
+class ImageCheckResponse(BaseModel):
+    potential_tw: str
+    score: float
 
 
 class ChatPayload(BaseModel):
