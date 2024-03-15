@@ -23,7 +23,7 @@ async def check_post(data: CheckRequest):
     q = QUERY + f"\"{data.post_text}\""
     payload = ChatPayload(text=q)
 
-    response = service.chat(payload)
+    response = await service.chat(payload)
     parsed_response = json.loads(response.get('openai')['generated_text'])
     damage_score = float(parsed_response.get("damageRatio"))
     explanation = parsed_response.get("explanation")

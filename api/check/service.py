@@ -11,11 +11,12 @@ EDENAI_HEADERS = {
 class CheckService:
     EDENAI_API_URL = "https://api.edenai.run/v2/"
 
-    def request_edenai(self, url: str, payload: ChatPayload):
-        return httpx.post(self.EDENAI_API_URL + url, json=payload.model_dump(), headers=EDENAI_HEADERS)
+    async def request_edenai(self, url: str, payload: ChatPayload):
+        async with httpx.AsyncClient() as client:
+            return await client.post(self.EDENAI_API_URL + url, json=payload.model_dump(), headers=EDENAI_HEADERS)
 
-    def chat(self, payload: ChatPayload):
-        response = self.request_edenai(
+    async def chat(self, payload: ChatPayload):
+        response = await self.request_edenai(
             "text/chat",
             payload
         )
