@@ -36,6 +36,7 @@ async def check_post(data: CheckRequest):
 async def check_image(data: ImageCheckRequest):
     payload = ImagePayload(file_url=data.file_url)
     response = await service.image_detect(payload)
+    print(response)
     item = response["amazon"]["items"][0]
     potential_tw = item["label"]
     score = item["likelihood_score"]

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Union
 from api.check.schemas import ChatPayload, ImagePayload
 from api.settings import settings
 import httpx
