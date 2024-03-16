@@ -20,7 +20,11 @@ class CheckService:
 
     async def request_edenai(self, url: str, payload: Union[ChatPayload, ImagePayload]):
         if isinstance(payload, ChatPayload):
-            cached_response = get_cached_response(payload.text)
+            cached_response = self.get_cached_response(payload.text)
+            if cached_response:
+                return cached_response
+        elif isinstance(payload, ImagePayload):
+            cached_response = self.get_cached_response(payload.file_url)
             if cached_response:
                 return cached_response
                 
@@ -29,6 +33,8 @@ class CheckService:
             data = response.json()
             if isinstance(payload, ChatPayload):
                 CACHE[payload.text] = data
+            elif isinstance(payload, ImagePayload):
+                CACHE[payload.file_url] = data
             return data
 
     async def chat(self, payload: ChatPayload):

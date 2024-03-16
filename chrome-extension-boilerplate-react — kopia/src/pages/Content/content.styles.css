@@ -38,3 +38,16 @@
 .explanation-content-text {
     font-size: 14px;
 }
+
+.blurred-img {
+    margin-top: 50%;
+    margin-left: 37%;
+    display: flex;
+    flex-direction: column;
+}
+
+.blurred-img-text {
+    color: #248BD6;
+    font-size: 48px;
+    font-weight: 600;
+}

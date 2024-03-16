@@ -25,7 +25,6 @@ async def check_post(data: CheckRequest):
     payload = ChatPayload(text=q)
 
     response = await service.chat(payload)
-    print(response.get("openai")["generated_text"])
     parsed_response = json.loads(response.get("openai")["generated_text"])
     damage_score = float(parsed_response.get("damageRatio"))
     explanation = parsed_response.get("explanation")
@@ -37,7 +36,11 @@ async def check_image(data: ImageCheckRequest):
     payload = ImagePayload(file_url=data.file_url)
     response = await service.image_detect(payload)
     print(response)
-    item = response["amazon"]["items"][0]
-    potential_tw = item["label"]
-    score = item["likelihood_score"]
+    item = response["amazon"]["items"]
+    if len(item) > 0:
+        potential_tw = item[0]["label"]
+        score = item[0]["likelihood_score"]
+    else:
+        potential_tw = "No TW detected"
+        score = 0
     return ImageCheckResponse(potential_tw=potential_tw, score=score)

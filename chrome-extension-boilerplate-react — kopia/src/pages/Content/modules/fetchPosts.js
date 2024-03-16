@@ -1,4 +1,5 @@
 const tweetsText = [];
+const imagesUrls = [];
 
 export const getApiResponse = async (post_text) => {
 	try {
@@ -8,6 +9,31 @@ export const getApiResponse = async (post_text) => {
 				"Content-Type": "application/json" // Fixed typo in header name
 			},
 			body: JSON.stringify({post_text}) // Fixed sending JSON data
+		});
+
+		console.log(res);
+		console.log(res.status); // Use res.status instead of res.status_code
+
+		if (! res.ok) { // If the response is not successful, throw an error
+			console.log(res.status)
+		} else {
+			return res.json(); // Return the JSON response
+		}
+
+		return res.json(); // Return the JSON response
+	} catch (error) {
+		console.error('Error:', error);
+	}
+};
+
+export const getApiResponseImage = async (file_url) => {
+	try {
+		const res = await fetch('http://localhost:8000/image', {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json" // Fixed typo in header name
+			},
+			body: JSON.stringify({file_url}) // Fixed sending JSON data
 		});
 
 		console.log(res);
@@ -59,8 +85,8 @@ export const fetchPosts = () => {
 								<div class="explanation-content">
 								  <span class="explanation-content-text">
 									${
-										response.explanation
-									}
+									response.explanation
+								}
 									</span>
 								</div>
 							  </div>`
@@ -162,4 +188,62 @@ export const writePost = async () => {
 			reject(error);
 		}
 	});
+}
+
+
+const unfilterPhoto = (elem) => {
+	elem.style.filter = "none";
+}
+
+export const photo = () => {
+	try {
+		return new Promise((resolve, reject) => {
+			try {
+				const elements = Array.from(document.querySelectorAll('a')).filter(element => element.href.includes("status") && /photo/.test(element.href)).map(elm => elm.children[0]);
+				console.log(elements)
+
+				elements.forEach(async (elem) => {
+					elem = elem.children[1]
+					if (!elem || elem.length === 0) {
+						return;
+					}
+					elem = elem.children[0].children[0]
+					if (elem && elem.style != null && elem.style.backgroundImage != null && elem.style.backgroundImage != "") {
+						const url = elem.style.backgroundImage.split('"')[1];
+						imagesUrls.push(url);
+						var response = null
+						try {
+							response = await getApiResponseImage(url)
+							console.log("ResponseI: " + response.score)
+							if (response.score > 0.5) {
+								elem.style.filter = "blur(70px)";
+								elem.addEventListener("click", (event) => {
+									unfilterPhoto(elem);
+								})
+
+								var testnode = document.createElement("div")
+								testnode.innerHTML = `<div class="blurred-img">
+								<span class="blurred-img-text">
+									${
+									response.potential_tw
+								}
+									</span>
+									Click on image to unblur
+							</div>`
+
+								elem.parentElement.appendChild(testnode)
+							}
+						} catch (error) {
+							console.log(error);
+						}
+					}
+				});
+			} catch (error) {
+				console.log(error);
+				reject(error);
+			}
+		});
+	} catch (error) {
+		console.log(error);
+	}
 }
