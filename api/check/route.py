@@ -6,8 +6,8 @@ from api.check.service import service
 router = APIRouter()
 
 QUERY = """
-Oceń i analizuj następujący post napisany przez dziecko na Twitterze, pod kątem potencjalnego zagrożenia dla innych. Podaj 'damageRatio' w skali od 0 do 1, gdzie 0-0.3 oznacza bezpieczny post, 0.3-0.7 wskazuje na post z potencjalnie szkodliwą lub pełną nienawiści treścią, a 0.7-1 wskazuje na post zawierający nękanie, rasizm lub terroryzm. Jeśli post jest szkodliwy, podaj 'explanation' szczegółowo wyjaśniając dziecko i pouczajac je, dlaczego taka treść jest nieodpowiednia i jak można ją poprawić, aby była bezpieczna i odpowiednia. Jeśli post jest bezpieczny, wyjaśnienie nie jest potrzebne. Wyjście powinno być w surowym formacie JSON dla łatwego parsowania. Odpowiedz w tym samym języku, co treść posta.
-Wyjasnienie powinno byc napisane w formie drugoosobowej, w prostym jezyku zrozumialym dla dziecka. Limit znakow w wyjasnieniu to okolo 150. W wyjasnieniu postaraj sie takze dodac przyklad dobrej wypowiedzi.
+Oceń i przeanalizuj post, pod kątem potencjalnego zagrożenia dla innych. Podaj 'damageRatio' w skali od 0 do 1, gdzie 0-0.3 oznacza bezpieczny post, 0.3-0.7 wskazuje na post z potencjalnie szkodliwą lub pełną nienawiści treścią, a 0.7-1 wskazuje na post zawierający nękanie, rasizm lub terroryzm. Jeśli post jest szkodliwy, podaj 'explanation', dlaczego taka treść jest nieodpowiednia i jak można ją poprawić, aby była bezpieczna i odpowiednia. Jeśli post jest bezpieczny, wyjaśnienie nie jest potrzebne (Podaj je jako pusty string ""). Wyjście powinno być w surowym formacie JSON dla łatwego parsowania. Odpowiedz w tym samym języku, co treść posta.
+Limit znakow w wyjasnieniu to okolo 150. Uwazaj, zeby nie przesadzac nazwy seriali, ksiazek, filmow nie sa niczym zlym, tak samo jak fakty, newsy i wydarzenia historyczne.
 
 Przykładowe wyjście:
 {
@@ -25,6 +25,7 @@ async def check_post(data: CheckRequest):
     payload = ChatPayload(text=q)
 
     response = await service.chat(payload)
+    print(response.get("openai")["generated_text"])
     parsed_response = json.loads(response.get("openai")["generated_text"])
     damage_score = float(parsed_response.get("damageRatio"))
     explanation = parsed_response.get("explanation")

@@ -1,0 +1,40 @@
+* {
+    font-family: sans-serif
+}
+
+.explanation-header {
+    background: #248BD6;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 4px 0 4px 0;
+}
+
+.explanation-header {
+    color: #fff;
+}
+
+.explanation-header-text {
+    margin-left: 5px;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: sans-serif;
+}
+
+.explanation {
+    margin-top: 12px;
+    width: 100%;
+    height: fit;
+    border-width: 3px;
+    border-style: solid;
+    border-color: #248BD6;
+    border-radius: 15px;
+}
+
+.explanation-content {
+    padding: 4px 0 6px 0;
+    margin-left: 5px;
+}
+
+.explanation-content-text {
+    font-size: 14px;
+}

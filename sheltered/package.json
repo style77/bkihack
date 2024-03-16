@@ -39,6 +39,11 @@
   "manifest": {
     "host_permissions": [
       "https://*/*"
-    ]
+    ],
+    "permissions": [
+      "activeTab",
+      "scripting"
+    ],
+    "content-security-policy": "script-src 'self' https://twitter.com/home 'unsafe-inline' 'unsafe-eval';"
   }
 }
